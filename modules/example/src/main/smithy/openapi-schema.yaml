@@ -1,0 +1,52 @@
+basePath: /v1
+consumes:
+  - application/yaml
+  - application/json
+definitions:
+  ErrorResponse:
+    description: An error response given by Weaviate end-points.
+    properties:
+      error:
+        items:
+          properties:
+            message:
+              type: string
+          type: object
+        type: array
+    type: object
+paths:
+  /classifications/{id}:
+    get:
+      description: Get status, results and metadata of a previously created classification
+      operationId: classifications.get
+      x-serviceIds:
+        - weaviate.classifications.get
+      parameters:
+        - description: classification id
+          in: path
+          type: string
+          name: id
+          required: true
+      responses:
+        '200':
+          description: Found the classification, returned as body
+        '401':
+          description: Unauthorized or invalid credentials.
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found - Classification does not exist
+        '500':
+          description: An error has occurred while trying to fulfill the request. Most likely the ErrorResponse will contain more information about the error.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: View previously created classification
+      tags:
+        - classifications
+produces:
+  - application/json
+schemes:
+  - https
+swagger: '2.0'
